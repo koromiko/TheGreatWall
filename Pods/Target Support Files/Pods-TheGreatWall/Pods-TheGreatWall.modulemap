@@ -1,0 +1,6 @@
+framework module Pods_TheGreatWall {
+  umbrella header "Pods-TheGreatWall-umbrella.h"
+
+  export *
+  module * { export * }
+}
