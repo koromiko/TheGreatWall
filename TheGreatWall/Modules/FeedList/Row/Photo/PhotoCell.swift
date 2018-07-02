@@ -73,6 +73,7 @@ class PhotoCell: UITableViewCell, CellConfiguraable {
     override func prepareForReuse() {
         super.prepareForReuse()
         viewModel?.image.completeDownload = nil
+        viewModel?.cellPressed = nil
     }
 
     private func setupInitialView() {

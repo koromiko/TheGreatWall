@@ -40,7 +40,7 @@ class SocialService {
     /// Follow a sepcific user
     func follow(userID: String, complete: @escaping (Bool) -> Void) {
         DispatchQueue.global().async {
-            sleep(5) // fake response time
+            sleep(1) // fake response time
             let index = Int(userID)! // Stub id is the same with the array index
             if var member = self.feeds[index] as? Member {
                 member.isFollowing = true

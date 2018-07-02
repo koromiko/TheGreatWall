@@ -12,7 +12,7 @@ class FeedListController {
     let socialService: SocialService
     let viewModel: FeedListViewModel
 
-    init(viewModel: FeedListViewModel, socialService: SocialService = SocialService()) {
+    init(viewModel: FeedListViewModel = FeedListViewModel(), socialService: SocialService = SocialService()) {
         self.viewModel = viewModel
         self.socialService = socialService
     }
@@ -45,9 +45,13 @@ class FeedListController {
 
                 vm = profileVM
             } else if let photoFeed = feed as? Photo {
-                vm = PhotoCellViewModel(title: photoFeed.captial,
-                                        desc: photoFeed.description,
-                                        image: AsyncImage(url: photoFeed.imageURL))
+                let photoCellViewModel = PhotoCellViewModel(title: photoFeed.captial,
+                                                            desc: photoFeed.description,
+                                                            image: AsyncImage(url: photoFeed.imageURL))
+                photoCellViewModel.cellPressed = {
+                    print("Open a photo viewer!")
+                }
+                vm = photoCellViewModel
             }
 
             if let vm = vm {

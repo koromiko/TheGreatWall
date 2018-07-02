@@ -9,10 +9,13 @@
 import Foundation
 import UIKit
 
-class PhotoCellViewModel: RowViewModel {
+class PhotoCellViewModel: RowViewModel, ViewModelPressible {
+
     let title: String
     let desc: String
     var image: AsyncImage
+
+    var cellPressed: (() -> Void)?
 
     init(title: String, desc: String, image: AsyncImage) {
         self.title = title

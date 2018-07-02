@@ -10,9 +10,12 @@ import UIKit
 
 class FeedListViewController: UIViewController {
 
-    let viewModel: FeedListViewModel = FeedListViewModel()
+    var viewModel: FeedListViewModel {
+        return controller.viewModel
+    }
+
     lazy var controller: FeedListController = {
-        return FeedListController(viewModel: self.viewModel)
+        return FeedListController()
     }()
 
     lazy var tableView: UITableView = {
@@ -116,7 +119,7 @@ extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sectionViewModel = viewModel.sectionViewModels.value[indexPath.section]
-        if let rowViewModel = sectionViewModel.rowViewModels[indexPath.row] as? Pressible {
+        if let rowViewModel = sectionViewModel.rowViewModels[indexPath.row] as? ViewModelPressible {
             rowViewModel.cellPressed?()
         }
     }
