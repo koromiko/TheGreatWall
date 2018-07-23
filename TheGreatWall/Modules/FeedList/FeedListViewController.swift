@@ -60,6 +60,7 @@ class FeedListViewController: UIViewController {
     }()
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         initView()
         initBinding()
         controller.start()
