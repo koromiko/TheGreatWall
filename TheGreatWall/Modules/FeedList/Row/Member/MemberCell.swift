@@ -86,26 +86,27 @@ class MemberCell: UITableViewCell, CellConfiguraable {
         profileImageView.image = viewModel.avatar.image
         nameLabel.text = viewModel.name
 
-        viewModel.isLoading.addObserver { [weak self] (isLoading) in
-            if isLoading {
-                self?.loadingIndicator.startAnimating()
-            } else {
-                self?.loadingIndicator.stopAnimating()
-            }
+        self.setLoading(isLoading: viewModel.isLoading.value)
+        viewModel.isLoading.valueChanged = { [weak self] (isLoading) in
+            self?.setLoading(isLoading: isLoading)
         }
 
-        viewModel.isAddBtnHidden.addObserver { [weak self] (isHidden) in
+        self.actionBtn.isHidden = viewModel.isAddBtnHidden.value
+        viewModel.isAddBtnHidden.valueChanged = { [weak self] (isHidden) in
             self?.actionBtn.isHidden = isHidden
         }
 
-        viewModel.isAddBtnEnabled.addObserver { [weak self] (isEnabled) in
+        self.actionBtn.isEnabled = viewModel.isAddBtnEnabled.value
+        viewModel.isAddBtnEnabled.valueChanged = { [weak self] (isEnabled) in
             self?.actionBtn.isEnabled = isEnabled
         }
 
-        viewModel.addBtnTitle.addObserver { [weak self] (title) in
+        self.actionBtn.setTitle(viewModel.addBtnTitle.value, for: .normal)
+        viewModel.addBtnTitle.valueChanged = { [weak self] (title) in
             self?.actionBtn.setTitle(title, for: .normal)
         }
 
+        self.profileImageView.image = viewModel.avatar.image
         viewModel.avatar.completeDownload = { [weak self] image in
             self?.profileImageView.image = image
         }
@@ -114,12 +115,20 @@ class MemberCell: UITableViewCell, CellConfiguraable {
         setNeedsLayout()
     }
 
+    private func setLoading(isLoading: Bool) {
+        if isLoading {
+            self.loadingIndicator.startAnimating()
+        } else {
+            self.loadingIndicator.stopAnimating()
+        }
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
-        viewModel?.addBtnTitle.removeObserver()
-        viewModel?.isLoading.removeObserver()
-        viewModel?.isAddBtnHidden.removeObserver()
-        viewModel?.isAddBtnEnabled.removeObserver()
+        viewModel?.addBtnTitle.valueChanged = nil
+        viewModel?.isLoading.valueChanged = nil
+        viewModel?.isAddBtnHidden.valueChanged = nil
+        viewModel?.isAddBtnEnabled.valueChanged = nil
         viewModel?.avatar.completeDownload = nil
     }
 

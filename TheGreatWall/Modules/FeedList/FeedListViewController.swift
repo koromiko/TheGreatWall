@@ -71,24 +71,31 @@ class FeedListViewController: UIViewController {
     }
 
     func initBinding() {
-        viewModel.sectionViewModels.addObserver(fireNow: false) { [weak self] (sectionViewModels) in
+        viewModel.rowViewModels.valueChanged = { [weak self] (_) in
             self?.tableView.reloadData()
         }
 
-        viewModel.title.addObserver { [weak self] (title) in
+        self.titleLabel.text = viewModel.title.value
+        viewModel.title.valueChanged = { [weak self] (title) in
             self?.titleLabel.text = title
         }
 
-        viewModel.isTableViewHidden.addObserver { [weak self] (isHidden) in
+        self.tableView.isHidden = viewModel.isTableViewHidden.value
+        viewModel.isTableViewHidden.valueChanged = { [weak self] (isHidden) in
             self?.tableView.isHidden = isHidden
         }
 
-        viewModel.isLoading.addObserver { [weak self] (isLoading) in
-            if isLoading {
-                self?.loadingIdicator.startAnimating()
-            } else {
-                self?.loadingIdicator.stopAnimating()
-            }
+        setLoading(isLoading: viewModel.isLoading.value)
+        viewModel.isLoading.valueChanged = { [weak self] (isLoading) in
+            self?.setLoading(isLoading: isLoading)
+        }
+    }
+
+    private func setLoading(isLoading: Bool) {
+        if isLoading {
+            self.loadingIdicator.startAnimating()
+        } else {
+            self.loadingIdicator.stopAnimating()
         }
     }
 
@@ -96,17 +103,16 @@ class FeedListViewController: UIViewController {
 
 extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.sectionViewModels.value.count
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionViewModel = viewModel.sectionViewModels.value[section]
-        return sectionViewModel.rowViewModels.count
+        return viewModel.rowViewModels.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let sectionViewModel = viewModel.sectionViewModels.value[indexPath.section]
-        let rowViewModel = sectionViewModel.rowViewModels[indexPath.row]
+
+        let rowViewModel = viewModel.rowViewModels.value[indexPath.row]
 
         let cell = tableView.dequeueReusableCell(withIdentifier: controller.cellIdentifier(for: rowViewModel), for: indexPath)
 
@@ -119,16 +125,8 @@ extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sectionViewModel = viewModel.sectionViewModels.value[indexPath.section]
-        if let rowViewModel = sectionViewModel.rowViewModels[indexPath.row] as? ViewModelPressible {
+        if let rowViewModel = viewModel.rowViewModels.value[indexPath.row] as? ViewModelPressible {
             rowViewModel.cellPressed?()
         }
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = SectionHeaderView()
-        let sectionViewModel = viewModel.sectionViewModels.value[section]
-        view.setTitle(sectionViewModel.headerTitle)
-        return view
     }
 }
