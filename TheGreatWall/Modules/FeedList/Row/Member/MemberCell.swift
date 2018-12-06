@@ -9,7 +9,7 @@
 import UIKit
 import SwiftIconFont
 
-class MemberCell: UITableViewCell, CellConfiguraable {
+class MemberCell: UITableViewCell, CellConfigurable {
     lazy var actionBtn: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false

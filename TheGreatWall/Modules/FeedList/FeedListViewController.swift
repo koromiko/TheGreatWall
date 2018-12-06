@@ -110,7 +110,7 @@ extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: controller.cellIdentifier(for: rowViewModel), for: indexPath)
 
-        if let cell = cell as? CellConfiguraable {
+        if let cell = cell as? CellConfigurable {
             cell.setup(viewModel: rowViewModel)
         }
 

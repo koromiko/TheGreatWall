@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol CellConfiguraable {
+protocol CellConfigurable {
     func setup(viewModel: RowViewModel)
 }

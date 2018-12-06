@@ -7,7 +7,7 @@
 //
 
 import UIKit
-class PhotoCell: UITableViewCell, CellConfiguraable {
+class PhotoCell: UITableViewCell, CellConfigurable {
 
     lazy var titleLabel: UILabel = {
         let label = UILabel()
